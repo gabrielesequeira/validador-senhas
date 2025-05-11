@@ -1,4 +1,6 @@
 import re 
+import tkinter as tk
+from tkinter import messagebox
 
 
 
@@ -23,24 +25,34 @@ def validar_senha(senha):
         erros.append("A senha deve conter pelo menos um número.")
 
     # Verifica se a senha contém pelo menos um símbolo especial (!@#... etc)
-    if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", senha):
+    if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", senha): #re.search(...) retorna None se não encontrar, então usamos not para testar a ausência.
         erros.append("A senha deve conter pelo menos um caractere especial.")
 
-
-    # se a lista conter algum erro, significa que a senha é fraca
-    if erros: 
-        print("Senha fraca: ")
-        for e in erros:
-            print("-" + e)
+    return erros
 
 
-    # se não hoouver nenhum elemento 
-    else :
-        print("Senha Forte! 🔐")
-    
+#função chamada quando o botão "Validar é clicado"
+
+def ao_clicar_validar():
+    senha = entrada_senha.get()
+    erros= validar_senha(senha)
+
+    if erros:
+        resultado = "Senha fraca \n" + "\n".join(f"- {e}" for e in erros)
+        messagebox.showwarning ("Resultado" , resultado)
+    else: 
+        messagebox.showinfo("Resultado", "Senha forte! 🔐")    
 
 
 #BLOCO PRINCIPAL
-senha_usuario = input("Digite sua senha para validação:")
-validar_senha(senha_usuario)
-            
+janela = tk.Tk()
+janela.title = ("Validador de senhas")
+janela.geometry("300x150")
+label = tk.Label(janela, text = "Digite sua senha: ")
+label.pack(pady=5)
+entrada_senha = tk.Entry(janela, show="*", width = 30) # show="*" - oculpa os caracteres digitados
+entrada_senha.pack(pady=5)
+botao = tk.Button(janela,text="Validar", command=ao_clicar_validar)
+botao.pack (pady=10)
+
+janela.mainloop()
